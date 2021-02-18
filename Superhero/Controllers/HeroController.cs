@@ -66,6 +66,7 @@ namespace Superhero.Controllers
         {
             try
             {
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
