@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Superhero.Data;
 using Superhero.Models;
 using System;
@@ -56,16 +57,20 @@ namespace Superhero.Controllers
         // GET: HeroController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var hero = _context.Superheroes.Where(h => h.Id == id).FirstOrDefault();
+            return View(hero);
         }
 
         // POST: HeroController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Hero superhero, IFormCollection collection)
         {
             try
             {
+                var hero = _context.Superheroes.Where(h => h.Id == superhero.Id).FirstOrDefault();
+                _context.Superheroes.Remove(hero);
+                _context.Superheroes.Add(superhero);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -78,7 +83,8 @@ namespace Superhero.Controllers
         // GET: HeroController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var hero = _context.Superheroes.Where(h => h.Id == id).FirstOrDefault();
+            return View(hero);
         }
 
         // POST: HeroController/Delete/5
@@ -88,6 +94,9 @@ namespace Superhero.Controllers
         {
             try
             {
+                var hero = _context.Superheroes.Where(h => h.Id == id).FirstOrDefault();
+                _context.Superheroes.Remove(hero);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
